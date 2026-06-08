@@ -2,6 +2,7 @@ import { createContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
 
+export const AppContext = createContext();
 export const AppProvider = ({ children }) => {
     let [language, setLanguage] = useState("en");
 
@@ -17,4 +18,3 @@ export const AppProvider = ({ children }) => {
     );
 };
 
-export const AppContext = createContext();
