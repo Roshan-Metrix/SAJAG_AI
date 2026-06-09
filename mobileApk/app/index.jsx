@@ -3,9 +3,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../context/AuthContext";
+import { useEffect, useState } from "react";
 
 export default function Home() {
     let { saveUser, user } = useAuth();
+    const [ready, setReady] = useState(false);
 
     const checkStart = async () => {
         const hasLaunched = await AsyncStorage.getItem("hasLaunched");
@@ -13,10 +15,15 @@ export default function Home() {
             router.replace("/getting-started");
         }
     };
-    checkStart();
 
-    if(user?.role === "citizen") router.replace("/(citizens)/home");
-    if(user?.role === "rescuers") router.replace("/(rescuers)/dashboard");
+    useEffect(() => {
+        checkStart();
+        if (user?.role === "citizen") router.replace("/(citizens)/home");
+        if (user?.role === "rescuers") router.replace("/(rescuers)/dashboard");
+        setReady(true);
+    }, [user]);
+
+    if (!ready) return null;
 
     return (
         <View className="bg-white p-4 flex-1">
@@ -49,7 +56,7 @@ export default function Home() {
                         <TouchableOpacity
                             className="flex-row items-center justify-end"
                             onPress={() => {
-                                saveUser({ role: "citizen" })
+                                saveUser({ role: "citizen" });
                                 router.replace("/(citizens)/home");
                             }}
                         >
@@ -72,7 +79,7 @@ export default function Home() {
                         </View>
 
                         <View className="gap-2">
-                            <Text className="font-semibold text-[20px] text-[#0A2E6B]">
+                            <Text className="font-semibold text-[20px] text-[#0A2E6B] max-w-[85%]">
                                 I am a Rescue Team Member
                             </Text>
                             <Text className="text-[16px] text-slate-700 text-wrap max-w-[85%]">

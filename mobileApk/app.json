@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "mobileapk",
-    "slug": "mobileapk",
-    "scheme": "mobileapk",
+    "name": "SAJAG AI",
+    "slug": "sajagai",
+    "scheme": "sajagai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,7 +25,14 @@
     "plugins": [
       "expo-router",
       "expo-status-bar",
-      "expo-splash-screen"
+      "expo-splash-screen",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Allow SAJAN AI to use your location."
+        }
+      ],
+      "expo-audio"
     ],
     "splash": {
       "image": "./assets/splash.png",
