@@ -1,8 +1,30 @@
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, Keyboard } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function CustomTabBarCitizen({ state, descriptors, navigation }) {
+export default function CustomTabBarCitizen({
+    state,
+    descriptors,
+    navigation,
+}) {
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const showSub = Keyboard.addListener("keyboardDidShow", () =>
+            setKeyboardVisible(true),
+        );
+        const hideSub = Keyboard.addListener("keyboardDidHide", () =>
+            setKeyboardVisible(false),
+        );
+
+        return () => {
+            showSub.remove();
+            hideSub.remove();
+        };
+    }, []);
+
+    if (isKeyboardVisible) return null;
+
     const icons = {
         home: "home",
         map: "map-outline",
