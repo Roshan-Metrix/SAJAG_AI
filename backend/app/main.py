@@ -3,6 +3,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from app.config.settings import get_settings
 from app.config.database import connect_to_mongo, close_mongo_connection
+from app.routes.auth_routes import router as auth_router
+from app.routes.sos_report_operation_routes import router as sos_report_operation_router
 
 settings = get_settings()
 
@@ -32,9 +34,10 @@ app.add_middleware(
 )
 
 # Include routes
-from app.routes.auth_routes import router as auth_router
 
 app.include_router(auth_router)
+app.include_router(sos_report_operation_router)
+
 
 
 @app.get("/")
