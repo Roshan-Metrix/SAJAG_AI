@@ -62,3 +62,91 @@
 2026-06-10 11:42:00.005 | INFO     | models.priority_model:load:209 - Priority model loaded.
 2026-06-10 11:42:00.005 | INFO     | train_pipeline:load_all:162 - Loaded: priority
 2026-06-10 11:42:00.005 | SUCCESS  | api.prediction_api:startup:52 - Models loaded: ['flood', 'landslide', 'accident', 'crowd', 'priority']
+2026-06-10 14:09:22.240 | INFO     | __main__:train_all_models:23 - ============================================================
+2026-06-10 14:09:22.242 | INFO     | __main__:train_all_models:24 - SAJAG AI – Full ML Training Pipeline
+2026-06-10 14:09:22.243 | INFO     | __main__:train_all_models:25 - ============================================================
+2026-06-10 14:09:22.243 | INFO     | __main__:train_all_models:29 - STEP 1/6 – Generating synthetic training datasets...
+2026-06-10 14:09:25.715 | INFO     | data.data_generator:generate_flood_dataset:90 - Flood dataset: 15000 rows | flood rate=41.11%
+2026-06-10 14:09:25.721 | INFO     | data.data_generator:generate_landslide_dataset:171 - Landslide dataset: 12000 rows | rate=46.26%
+2026-06-10 14:09:25.731 | INFO     | data.data_generator:generate_accident_dataset:253 - Accident dataset: 20000 rows | rate=46.21%
+2026-06-10 14:09:25.735 | INFO     | data.data_generator:generate_crowd_dataset:323 - Crowd dataset: 8000 rows | critical rate=2.93%
+2026-06-10 14:09:25.741 | INFO     | data.data_generator:generate_priority_dataset:400 - Priority dataset: 10000 rows | critical rate=3.56%
+2026-06-10 14:09:25.860 | SUCCESS  | data.data_generator:generate_all:420 - Saved flood dataset → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\data\flood_training.csv
+2026-06-10 14:09:25.971 | SUCCESS  | data.data_generator:generate_all:420 - Saved landslide dataset → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\data\landslide_training.csv
+2026-06-10 14:09:26.112 | SUCCESS  | data.data_generator:generate_all:420 - Saved accident dataset → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\data\accident_training.csv
+2026-06-10 14:09:26.153 | SUCCESS  | data.data_generator:generate_all:420 - Saved crowd dataset → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\data\crowd_training.csv
+2026-06-10 14:09:26.206 | SUCCESS  | data.data_generator:generate_all:420 - Saved priority dataset → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\data\priority_training.csv
+2026-06-10 14:09:26.206 | SUCCESS  | __main__:train_all_models:32 - Datasets generated: ['flood', 'landslide', 'accident', 'crowd', 'priority']
+2026-06-10 14:09:26.207 | INFO     | __main__:train_all_models:37 - STEP 2/6 – Training Flood Risk Model...
+2026-06-10 14:09:55.873 | INFO     | models.flood_model:train:76 - RF  CV AUC: 0.6184 ± 0.0056
+2026-06-10 14:09:55.874 | INFO     | models.flood_model:train:77 - XGB CV AUC: 0.5896 ± 0.0077
+2026-06-10 14:09:59.777 | SUCCESS  | models.flood_model:train:120 - Flood model trained | ROC-AUC=0.6090 | AP=0.5254
+2026-06-10 14:09:59.979 | SUCCESS  | models.flood_model:save:181 - Flood model saved → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\models\saved\flood_model.pkl
+2026-06-10 14:09:59.979 | SUCCESS  | __main__:train_all_models:48 - Flood model ✓ | AUC=0.609
+2026-06-10 14:09:59.980 | INFO     | __main__:train_all_models:51 - STEP 3/6 – Training Landslide Risk Model...
+2026-06-10 14:10:17.556 | INFO     | models.landslide_model:train:68 - XGB CV AUC: 0.5551 ± 0.0139
+2026-06-10 14:10:17.557 | INFO     | models.landslide_model:train:69 - RF  CV AUC: 0.5810 ± 0.0158
+2026-06-10 14:10:24.094 | SUCCESS  | models.landslide_model:train:99 - Landslide model | ROC-AUC=0.5656
+2026-06-10 14:10:24.380 | SUCCESS  | models.landslide_model:save:145 - Landslide model saved → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\models\saved\landslide_model.pkl
+2026-06-10 14:10:24.381 | SUCCESS  | __main__:train_all_models:62 - Landslide model ✓ | AUC=0.5656
+2026-06-10 14:10:24.381 | INFO     | __main__:train_all_models:65 - STEP 4/6 – Training Accident Hotspot Model...
+2026-06-10 14:10:34.747 | INFO     | models.accident_model:train:69 - RF  CV AUC: 0.6071 ± 0.0099
+2026-06-10 14:10:34.749 | INFO     | models.accident_model:train:70 - XGB CV AUC: 0.5841 ± 0.0083
+2026-06-10 14:10:37.920 | SUCCESS  | models.accident_model:train:97 - Accident model | ROC-AUC=0.5926 | F1=0.5877
+2026-06-10 14:10:38.161 | SUCCESS  | models.accident_model:save:173 - Accident model saved → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\models\saved\accident_model.pkl
+2026-06-10 14:10:38.162 | SUCCESS  | __main__:train_all_models:76 - Accident model ✓ | AUC=0.5926
+2026-06-10 14:10:38.162 | INFO     | __main__:train_all_models:79 - STEP 5/6 – Training Crowd Density Model...
+2026-06-10 14:10:42.458 | SUCCESS  | models.crowd_model:train:88 - Crowd model trained | RMSE=0.0328
+2026-06-10 14:10:42.497 | SUCCESS  | models.crowd_model:save:114 - Crowd model saved → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\models\saved\crowd_model.pkl
+2026-06-10 14:10:42.497 | SUCCESS  | __main__:train_all_models:90 - Crowd model ✓ | RMSE=0.0328
+2026-06-10 14:10:42.498 | INFO     | __main__:train_all_models:93 - STEP 6/6 – Training Rescue Priority Model...
+2026-06-10 14:10:52.222 | INFO     | models.priority_model:train:78 - Classifier CV F1: 0.8653 ± 0.0032
+2026-06-10 14:10:56.616 | SUCCESS  | models.priority_model:train:107 - Priority model | CLF F1=0.8653 | REG RMSE=0.0331
+2026-06-10 14:10:56.680 | SUCCESS  | models.priority_model:save:200 - Priority model saved → D:\Hackathon\Hack4Safety_Nepal\Hack4Safety\ai-engine\models\saved\priority_model.pkl
+2026-06-10 14:10:56.681 | SUCCESS  | __main__:train_all_models:105 - Priority model ✓ | F1=0.8653
+2026-06-10 14:10:56.681 | INFO     | __main__:train_all_models:111 - ============================================================
+2026-06-10 14:10:56.681 | INFO     | __main__:train_all_models:112 - TRAINING COMPLETE – Summary
+2026-06-10 14:10:56.681 | INFO     | __main__:train_all_models:113 - ============================================================
+2026-06-10 14:10:56.682 | INFO     | __main__:train_all_models:117 -   flood       : {'roc_auc': 0.609, 'avg_precision': 0.5254, 'time_sec': 33.8}
+2026-06-10 14:10:56.682 | INFO     | __main__:train_all_models:117 -   landslide   : {'roc_auc': 0.5656, 'avg_precision': 0.5216, 'time_sec': 24.4}
+2026-06-10 14:10:56.682 | INFO     | __main__:train_all_models:117 -   accident    : {'roc_auc': 0.5926, 'f1_score': 0.5877, 'time_sec': 13.8}
+2026-06-10 14:10:56.682 | INFO     | __main__:train_all_models:117 -   crowd       : {'stampede_rmse': np.float64(0.0328), 'stampede_r2': 0.9402, 'time_sec': 4.3}
+2026-06-10 14:10:56.682 | INFO     | __main__:train_all_models:117 -   priority    : {'clf_f1': np.float64(0.8653), 'reg_rmse': np.float64(0.0331), 'reg_r2': 0.9516, 'time_sec': 14.2}
+2026-06-10 14:10:56.683 | INFO     | __main__:train_all_models:118 -   Total time: 94.4s
+2026-06-10 14:10:56.684 | SUCCESS  | __main__:train_all_models:124 - Metrics saved → logs\training_report.json
+2026-06-10 14:12:06.238 | INFO     | api.prediction_api:startup:49 - Loading AI models...
+2026-06-10 14:12:08.272 | INFO     | models.flood_model:load:190 - Flood model loaded.
+2026-06-10 14:12:08.272 | INFO     | train_pipeline:load_all:162 - Loaded: flood
+2026-06-10 14:12:08.894 | INFO     | models.landslide_model:load:154 - Landslide model loaded.
+2026-06-10 14:12:08.895 | INFO     | train_pipeline:load_all:162 - Loaded: landslide
+2026-06-10 14:12:08.977 | INFO     | models.accident_model:load:182 - Accident model loaded.
+2026-06-10 14:12:08.977 | INFO     | train_pipeline:load_all:162 - Loaded: accident
+2026-06-10 14:12:09.082 | INFO     | models.crowd_model:load:120 - Crowd model loaded.
+2026-06-10 14:12:09.082 | INFO     | train_pipeline:load_all:162 - Loaded: crowd
+2026-06-10 14:12:09.491 | INFO     | models.priority_model:load:209 - Priority model loaded.
+2026-06-10 14:12:09.491 | INFO     | train_pipeline:load_all:162 - Loaded: priority
+2026-06-10 14:12:09.491 | SUCCESS  | api.prediction_api:startup:52 - Models loaded: ['flood', 'landslide', 'accident', 'crowd', 'priority']
+2026-06-10 14:14:37.969 | INFO     | api.prediction_api:startup:49 - Loading AI models...
+2026-06-10 14:14:39.716 | INFO     | models.flood_model:load:190 - Flood model loaded.
+2026-06-10 14:14:39.716 | INFO     | train_pipeline:load_all:162 - Loaded: flood
+2026-06-10 14:14:39.862 | INFO     | models.landslide_model:load:154 - Landslide model loaded.
+2026-06-10 14:14:39.862 | INFO     | train_pipeline:load_all:162 - Loaded: landslide
+2026-06-10 14:14:39.959 | INFO     | models.accident_model:load:182 - Accident model loaded.
+2026-06-10 14:14:39.959 | INFO     | train_pipeline:load_all:162 - Loaded: accident
+2026-06-10 14:14:39.989 | INFO     | models.crowd_model:load:120 - Crowd model loaded.
+2026-06-10 14:14:39.989 | INFO     | train_pipeline:load_all:162 - Loaded: crowd
+2026-06-10 14:14:40.069 | INFO     | models.priority_model:load:209 - Priority model loaded.
+2026-06-10 14:14:40.070 | INFO     | train_pipeline:load_all:162 - Loaded: priority
+2026-06-10 14:14:40.070 | SUCCESS  | api.prediction_api:startup:52 - Models loaded: ['flood', 'landslide', 'accident', 'crowd', 'priority']
+2026-06-10 14:19:51.113 | INFO     | api.prediction_api:startup:49 - Loading AI models...
+2026-06-10 14:19:52.192 | INFO     | models.flood_model:load:190 - Flood model loaded.
+2026-06-10 14:19:52.193 | INFO     | train_pipeline:load_all:162 - Loaded: flood
+2026-06-10 14:19:52.314 | INFO     | models.landslide_model:load:154 - Landslide model loaded.
+2026-06-10 14:19:52.315 | INFO     | train_pipeline:load_all:162 - Loaded: landslide
+2026-06-10 14:19:52.391 | INFO     | models.accident_model:load:182 - Accident model loaded.
+2026-06-10 14:19:52.392 | INFO     | train_pipeline:load_all:162 - Loaded: accident
+2026-06-10 14:19:52.415 | INFO     | models.crowd_model:load:120 - Crowd model loaded.
+2026-06-10 14:19:52.415 | INFO     | train_pipeline:load_all:162 - Loaded: crowd
+2026-06-10 14:19:52.484 | INFO     | models.priority_model:load:209 - Priority model loaded.
+2026-06-10 14:19:52.484 | INFO     | train_pipeline:load_all:162 - Loaded: priority
+2026-06-10 14:19:52.484 | SUCCESS  | api.prediction_api:startup:52 - Models loaded: ['flood', 'landslide', 'accident', 'crowd', 'priority']
