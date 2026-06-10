@@ -165,6 +165,7 @@ async def update_operation_task_status(operation_id: str, payload) -> bool:
         return False
 
     new_task_status = payload.taskStatus
+    old_task_status = op_doc.get("taskStatus", "not_assign")
 
     # Overall operation status
     if new_task_status == "completed":
@@ -198,6 +199,16 @@ async def update_operation_task_status(operation_id: str, payload) -> bool:
                 await sos_col.delete_one(
                     {"_id": sos_object_id}
                 )
+                
+                # Send completion notification to team
+                from app.services.notification_service import notification_manager
+                assign_id = op_doc.get("assignId")
+                if assign_id:
+                    await notification_manager.notify_operation_completed(
+                        team_id=str(assign_id),
+                        operation_id=str(op_doc["_id"]),
+                        sos_id=sos_id,
+                    )
             else:
                 # Keep SOS status synced with taskStatus
                 await sos_col.update_one(
@@ -209,6 +220,17 @@ async def update_operation_task_status(operation_id: str, payload) -> bool:
                         }
                     },
                 )
+                
+                # Send status update notification
+                from app.services.notification_service import notification_manager
+                assign_id = op_doc.get("assignId")
+                if assign_id:
+                    await notification_manager.notify_status_update(
+                        team_id=str(assign_id),
+                        operation_id=str(op_doc["_id"]),
+                        old_status=old_task_status,
+                        new_status=new_task_status,
+                    )
 
         except Exception:
             pass

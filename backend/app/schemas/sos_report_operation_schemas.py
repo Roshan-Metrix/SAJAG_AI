@@ -27,6 +27,7 @@ OperationStatus = Literal[
 # Workflow/progress state
 TaskStatus = Literal[
     "not_assign",
+    "accepted",
     "assigned",
     "on_the_way",
     "reached",

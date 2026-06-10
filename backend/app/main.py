@@ -6,6 +6,13 @@ from app.config.database import connect_to_mongo, close_mongo_connection
 from app.routes.auth_routes import router as auth_router
 from app.routes.sos_report_operation_routes import router as sos_report_operation_router
 from app.routes.assign_operations_routes import router as assign_operations_router
+from app.routes.rescue_team_location_ws_routes import router as rescue_team_location_ws_router
+from app.routes.geospatial_routes import router as geospatial_router
+from app.routes.notifications_ws_routes import router as notifications_ws_router
+from app.routes.admin_dashboard_ws_routes import router as admin_dashboard_ws_router
+from app.routes.dashboard_routes import router as dashboard_router
+from app.routes.mission_routes import router as mission_router
+
 
 settings = get_settings()
 
@@ -36,16 +43,19 @@ app.add_middleware(
 )
 
 # Include routes
-
-
 app.include_router(auth_router)
 app.include_router(sos_report_operation_router)
 app.include_router(assign_operations_router)
-
-
+app.include_router(rescue_team_location_ws_router)
+app.include_router(geospatial_router)
+app.include_router(notifications_ws_router)
+app.include_router(admin_dashboard_ws_router)
+app.include_router(dashboard_router)
+app.include_router(mission_router)
 
 
 @app.get("/")
+
 async def root():
     """Root endpoint"""
     return {
