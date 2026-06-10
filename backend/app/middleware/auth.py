@@ -5,6 +5,28 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.config.security import JWTHandler
 
+from jose import jwt, JWTError
+from app.config.settings import get_settings
+
+settings = get_settings()
+
+SECRET_KEY = settings.SECRET_KEY
+ALGORITHM = settings.ALGORITHM
+
+
+def verify_access_token(token: str):
+
+    try:
+        payload = jwt.decode(
+            token,
+            SECRET_KEY,
+            algorithms=[ALGORITHM]
+        )
+
+        return payload
+
+    except JWTError:
+        raise Exception("Invalid token")
 
 def _get_bearer_token(
     credentials: HTTPAuthorizationCredentials,
