@@ -6,7 +6,10 @@
     "@expo/vector-icons": "^15.1.1",
     "@react-native-async-storage/async-storage": "2.2.0",
     "expo": "~56.0.9",
+    "expo-audio": "~56.0.11",
     "expo-constants": "~56.0.17",
+    "expo-dev-client": "~56.0.19",
+    "expo-file-system": "~56.0.7",
     "expo-image-picker": "~56.0.16",
     "expo-linking": "~56.0.13",
     "expo-location": "~56.0.16",
@@ -19,11 +22,10 @@
     "react-hook-form": "^7.78.0",
     "react-native": "0.85.3",
     "react-native-css": "^3.0.7",
+    "react-native-maps": "1.27.2",
     "react-native-reanimated": "4.3.1",
     "react-native-safe-area-context": "~5.7.0",
-    "react-native-screens": "4.25.2",
-    "expo-audio": "~56.0.11",
-    "expo-file-system": "~56.0.7"
+    "react-native-screens": "4.25.2"
   },
   "scripts": {
     "start": "expo start",
