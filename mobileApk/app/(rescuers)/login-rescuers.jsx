@@ -5,7 +5,7 @@ import {
     TextInput,
     TouchableOpacity,
     StatusBar,
-    Image
+    Image,
 } from "react-native";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "expo-router";
@@ -61,18 +61,13 @@ export default function LoginScreen() {
 
                 {/* ── User ID / Email Field ── */}
                 <Text className="text-[14px] font-medium text-gray-700 mb-1.5">
-                    Email
+                    Email or Mobile no.
                 </Text>
                 <Controller
                     control={control}
                     name="email"
                     rules={{
-                        required: "Email is required",
-                        validate: (value) =>
-                            value.includes("@")
-                                ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ||
-                                  "Enter a valid email address"
-                                : true,
+                        required: "Email or Mobile no. is required",
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
                         <View
@@ -90,7 +85,7 @@ export default function LoginScreen() {
                             />
                             <TextInput
                                 className="flex-1 text-sm text-gray-800"
-                                placeholder="Enter user ID or email"
+                                placeholder="Enter email or mobile no."
                                 placeholderTextColor="#9CA3AF"
                                 autoCapitalize="none"
                                 keyboardType="email-address"
@@ -207,7 +202,10 @@ export default function LoginScreen() {
                 >
                     {/* Replace the View below with <Image source={require("../assets/google-icon.png")} … /> if you have the asset */}
                     <View className="w-6 h-6 mr-3 items-center justify-center">
-                        <Image source={require("../../assets/google.png")} className="h-14 w-14" />
+                        <Image
+                            source={require("../../assets/google.png")}
+                            className="h-14 w-14"
+                        />
                         {/* ↑ swap with a real Google SVG/PNG icon in production */}
                     </View>
                     <Text className="text-[16px] font-medium text-gray-700">
@@ -222,7 +220,10 @@ export default function LoginScreen() {
                     activeOpacity={0.8}
                 >
                     <View className="w-6 h-6 mr-3 items-center justify-center rounded-full bg-blue-700">
-                        <Image source={require("../../assets/fb.png")}  className="h-10 w-10" />
+                        <Image
+                            source={require("../../assets/fb.png")}
+                            className="h-10 w-10"
+                        />
                     </View>
                     <Text className="text-[15px] font-medium text-gray-700">
                         Continue with Facebook
@@ -234,7 +235,11 @@ export default function LoginScreen() {
                     <Text className="text-[14px] text-gray-500">
                         Don't have an account?{" "}
                     </Text>
-                    <TouchableOpacity onPress={() => router.push("/(rescuers)/register-rescuers")}>
+                    <TouchableOpacity
+                        onPress={() =>
+                            router.push("/(rescuers)/register-rescuers")
+                        }
+                    >
                         <Text className="text-[14px] font-semibold text-blue-600">
                             Sign Up
                         </Text>
