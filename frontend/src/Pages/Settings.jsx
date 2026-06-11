@@ -1,145 +1,304 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import {
+  FaCog,
+  FaMapMarkedAlt,
+  FaBell,
+  FaShieldAlt,
+  FaLanguage,
+  FaDatabase,
+  FaCloudUploadAlt,
+} from "react-icons/fa";
 
-const SETTING_CATS = [
-  { id: 'general', label: 'General Settings', icon: '⚙️' },
-  { id: 'map', label: 'Map Settings', icon: '🗺️' },
-  { id: 'alert', label: 'Alert Settings', icon: '🔔' },
-  { id: 'notification', label: 'Notification Settings', icon: '📱' },
-  { id: 'system', label: 'System Preferences', icon: '🖥️' },
-  { id: 'security', label: 'Security Settings', icon: '🔒' },
-  { id: 'language', label: 'Language Settings', icon: '🌐' },
-  { id: 'backup', label: 'Backup & Restore', icon: '💾' },
-  { id: 'api', label: 'API Integrations', icon: '🔗' },
-];
+function Settings() {
+  const menus = [
+    { name: "General Settings", icon: <FaCog /> },
+    { name: "Map Settings", icon: <FaMapMarkedAlt /> },
+    { name: "Alert Settings", icon: <FaBell /> },
+    { name: "Notification Settings", icon: <FaBell /> },
+    { name: "Security Settings", icon: <FaShieldAlt /> },
+    { name: "Language Settings", icon: <FaLanguage /> },
+    { name: "Backup & Restore", icon: <FaCloudUploadAlt /> },
+    { name: "API Integrations", icon: <FaDatabase /> },
+  ];
 
-const Toggle = ({ defaultOn = false }) => {
-  const [on, setOn] = useState(defaultOn);
+  const [activeMenu, setActiveMenu] = useState("General Settings");
+
+  const [formData, setFormData] = useState({
+    organization: "Nepal Police",
+    platform: "SAJAG AI",
+    timezone: "(UTC+05:45) Kathmandu",
+    dateFormat: "May 23, 2025",
+    timeFormat: "12 Hour (AM/PM)",
+    language: "English",
+    itemsPerPage: "10",
+  });
+
+  const [platformSettings, setPlatformSettings] = useState({
+    realtime: true,
+    push: true,
+    email: true,
+    sms: false,
+    offline: true,
+    analytics: true,
+    ai: true,
+    backup: true,
+  });
+
+  const [retention, setRetention] = useState({
+    incidents: "2 Years",
+    activity: "1 Year",
+    logs: "6 Months",
+  });
+
+  const saveSettings = () => {
+    alert("Settings Saved Successfully");
+  };
+
+  const updateRetention = () => {
+    alert("Retention Updated Successfully");
+  };
+
+  const toggleSetting = (key) => {
+    setPlatformSettings({
+      ...platformSettings,
+      [key]: !platformSettings[key],
+    });
+  };
+
   return (
-    <button onClick={() => setOn(!on)} className={`w-10 h-5 rounded-full transition-colors ${on ? 'bg-blue-600' : 'bg-gray-300'} relative`}>
-      <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${on ? 'translate-x-5' : 'translate-x-0.5'}`} />
-    </button>
-  );
-};
+    <div className="p-6">
+      {/* HEADER */}
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">Settings</h1>
 
-export default function Settings() {
-  const [activeCat, setActiveCat] = useState('general');
+        <p className="text-gray-500">
+          Manage system settings and configurations
+        </p>
+      </div>
 
-  return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 flex p-4 gap-4 bg-[#f0f4f8]">
-        {/* Left Nav */}
-        <div className="w-52 bg-white rounded-xl shadow-card p-2">
-          {SETTING_CATS.map(c => (
-            <button
-              key={c.id}
-              onClick={() => setActiveCat(c.id)}
-              className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-left transition ${activeCat === c.id ? 'bg-blue-50 text-blue-700 font-medium' : 'text-gray-600 hover:bg-gray-50'}`}
-            >
-              <span>{c.icon}</span>
-              <span className="text-xs">{c.label}</span>
-            </button>
-          ))}
+      {/* MAIN GRID */}
+      <div className="grid grid-cols-12 gap-6">
+        {/* LEFT MENU */}
+        <div className="col-span-12 lg:col-span-3">
+          <div className="bg-white rounded-2xl border p-3">
+            <div className="space-y-2">
+              {menus.map((menu) => (
+                <button
+                  key={menu.name}
+                  onClick={() => setActiveMenu(menu.name)}
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-left transition ${
+                    activeMenu === menu.name
+                      ? "bg-blue-100 text-blue-700 font-semibold"
+                      : "hover:bg-gray-100"
+                  }`}
+                >
+                  {menu.icon}
+                  {menu.name}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        {/* Right Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="grid grid-cols-2 gap-4">
-            {/* General Settings */}
-            <div className="bg-white rounded-xl shadow-card p-5">
-              <h3 className="font-semibold text-sm text-gray-800 mb-4">General Settings</h3>
-              <div className="space-y-4">
-                {[
-                  { label: 'Organization Name', value: 'Nepal Police' },
-                  { label: 'Platform Name', value: 'SAJAG AI' },
-                  { label: 'Time Zone', value: '(UTC+05:45) Kathmandu' },
-                  { label: 'Date Format', value: 'May 23, 2025' },
-                  { label: 'Time Format', value: '12 Hour (AM/PM)' },
-                  { label: 'Default Language', value: 'English' },
-                  { label: 'Items Per Page', value: '10' },
-                ].map(f => (
-                  <div key={f.label}>
-                    <label className="block text-xs font-medium text-gray-600 mb-1">{f.label}</label>
-                    <div className="flex items-center justify-between border border-gray-200 rounded-lg px-3 py-2">
-                      <span className="text-sm text-gray-700">{f.value}</span>
-                      <span className="text-gray-400 text-xs">▾</span>
-                    </div>
-                  </div>
-                ))}
-                <button className="w-full bg-[#1a3a6b] text-white text-sm py-2.5 rounded-lg hover:bg-[#0f2347] font-medium">
-                  Save Settings
+        {/* CENTER FORM */}
+        <div className="col-span-12 lg:col-span-5">
+          <div className="bg-white rounded-2xl border p-6">
+            <h2 className="text-xl font-semibold mb-5">{activeMenu}</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm text-gray-500">
+                  Organization Name
+                </label>
+
+                <input
+                  value={formData.organization}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      organization: e.target.value,
+                    })
+                  }
+                  className="w-full border rounded-lg px-4 py-2 mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500">Platform Name</label>
+
+                <input
+                  value={formData.platform}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      platform: e.target.value,
+                    })
+                  }
+                  className="w-full border rounded-lg px-4 py-2 mt-1"
+                />
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500">Time Zone</label>
+
+                <select
+                  className="w-full border rounded-lg px-4 py-2 mt-1"
+                  value={formData.timezone}
+                >
+                  <option>(UTC+05:45) Kathmandu</option>
+                  <option>UTC</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500">Date Format</label>
+
+                <select className="w-full border rounded-lg px-4 py-2 mt-1">
+                  <option>May 23, 2025</option>
+                  <option>23/05/2025</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500">Time Format</label>
+
+                <select className="w-full border rounded-lg px-4 py-2 mt-1">
+                  <option>12 Hour (AM/PM)</option>
+                  <option>24 Hour</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500">
+                  Default Language
+                </label>
+
+                <select className="w-full border rounded-lg px-4 py-2 mt-1">
+                  <option>English</option>
+                  <option>Nepali</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="text-sm text-gray-500">Items Per Page</label>
+
+                <select className="w-full border rounded-lg px-4 py-2 mt-1">
+                  <option>10</option>
+                  <option>20</option>
+                  <option>50</option>
+                </select>
+              </div>
+
+              <button
+                onClick={saveSettings}
+                className="mt-5 bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+              >
+                Save Settings
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT SIDE */}
+        <div className="col-span-12 lg:col-span-4 space-y-6">
+          {/* TOGGLES */}
+          <div className="bg-white rounded-2xl border p-6">
+            <h2 className="text-xl font-semibold mb-5">Platform Settings</h2>
+
+            {[
+              ["Enable Real-time Updates", "realtime"],
+              ["Enable Push Notifications", "push"],
+              ["Enable Email Notifications", "email"],
+              ["Enable SMS Alerts", "sms"],
+              ["Enable Offline Mode", "offline"],
+              ["Enable Data Analytics", "analytics"],
+              ["Enable AI Predictions", "ai"],
+              ["Enable Auto Backup", "backup"],
+            ].map(([label, key]) => (
+              <div key={key} className="flex justify-between items-center py-2">
+                <span>{label}</span>
+
+                <button
+                  onClick={() => toggleSetting(key)}
+                  className={`w-12 h-6 rounded-full relative transition ${
+                    platformSettings[key] ? "bg-blue-600" : "bg-gray-300"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-1 w-4 h-4 bg-white rounded-full transition ${
+                      platformSettings[key] ? "right-1" : "left-1"
+                    }`}
+                  />
                 </button>
               </div>
-            </div>
+            ))}
+          </div>
 
-            {/* Platform Settings */}
-            <div className="bg-white rounded-xl shadow-card p-5">
-              <h3 className="font-semibold text-sm text-gray-800 mb-4">Platform Settings</h3>
-              <div className="space-y-3">
-                {[
-                  { label: 'Enable Real-time Updates', on: true },
-                  { label: 'Enable Push Notifications', on: false },
-                  { label: 'Enable Email Notifications', on: true },
-                  { label: 'Enable SMS Alerts', on: false },
-                  { label: 'Enable Offline Mode', on: true },
-                  { label: 'Enable Data Analytics', on: true },
-                  { label: 'Enable AI Predictions', on: true },
-                  { label: 'Enable Auto Backup', on: true },
-                ].map(s => (
-                  <div key={s.label} className="flex items-center justify-between py-1">
-                    <span className="text-sm text-gray-700">{s.label}</span>
-                    <Toggle defaultOn={s.on} />
-                  </div>
-                ))}
+          {/* DATA RETENTION */}
+          <div className="bg-white rounded-2xl border p-6">
+            <h2 className="text-xl font-semibold mb-5">Data Retention</h2>
+
+            <div className="space-y-4">
+              <div>
+                <label>Incident Data</label>
+
+                <select
+                  className="w-full border rounded-lg px-4 py-2 mt-1"
+                  value={retention.incidents}
+                  onChange={(e) =>
+                    setRetention({
+                      ...retention,
+                      incidents: e.target.value,
+                    })
+                  }
+                >
+                  <option>2 Years</option>
+                  <option>5 Years</option>
+                </select>
               </div>
 
-              <div className="mt-6">
-                <h3 className="font-semibold text-sm text-gray-800 mb-3">Data Retention</h3>
-                <div className="space-y-3">
-                  {[
-                    { label: 'Incident Data', value: '2 Years' },
-                    { label: 'User Activity Logs', value: '1 Year' },
-                    { label: 'System Logs', value: '6 Months' },
-                  ].map(f => (
-                    <div key={f.label} className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">{f.label}</span>
-                      <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-1.5">
-                        <span className="text-sm text-gray-700">{f.value}</span>
-                        <span className="text-gray-400 text-xs">▾</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button className="w-full mt-4 bg-orange-600 text-white text-sm py-2.5 rounded-lg hover:bg-orange-700 font-medium">
-                  Update Retention
-                </button>
-              </div>
-            </div>
+              <div>
+                <label>User Activity Logs</label>
 
-            {/* API Integrations */}
-            <div className="col-span-2 bg-white rounded-xl shadow-card p-5">
-              <h3 className="font-semibold text-sm text-gray-800 mb-4">API Integrations</h3>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { name: 'AI Engine API', desc: 'Connect your AI prediction engine', endpoint: 'REACT_APP_AI_API_URL', status: 'Not Connected' },
-                  { name: 'SOS Alert API', desc: 'Receive live SOS alerts from citizens', endpoint: 'REACT_APP_SOS_API_URL', status: 'Not Connected' },
-                  { name: 'Weather API', desc: 'Real-time weather data for predictions', endpoint: 'REACT_APP_WEATHER_API_URL', status: 'Not Connected' },
-                  { name: 'Maps API', desc: 'OpenStreetMap / Google Maps integration', endpoint: 'REACT_APP_MAPS_API_KEY', status: 'Connected' },
-                  { name: 'SMS Gateway', desc: 'Send SMS alerts to citizens', endpoint: 'REACT_APP_SMS_API_URL', status: 'Not Connected' },
-                  { name: 'Satellite Data', desc: 'Satellite imagery for heatmaps', endpoint: 'REACT_APP_SAT_API_URL', status: 'Not Connected' },
-                ].map(api => (
-                  <div key={api.name} className={`border rounded-xl p-4 ${api.status === 'Connected' ? 'border-green-200 bg-green-50' : 'border-gray-200'}`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <p className="text-sm font-semibold text-gray-800">{api.name}</p>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${api.status === 'Connected' ? 'text-green-600 bg-green-100' : 'text-gray-500 bg-gray-100'}`}>{api.status}</span>
-                    </div>
-                    <p className="text-xs text-gray-500 mb-2">{api.desc}</p>
-                    <code className="text-[10px] bg-gray-100 px-2 py-1 rounded text-blue-600 block truncate">{api.endpoint}</code>
-                    <button className={`mt-2 w-full text-xs py-1.5 rounded-lg transition font-medium ${api.status === 'Connected' ? 'bg-red-50 text-red-600 hover:bg-red-100' : 'bg-blue-50 text-blue-600 hover:bg-blue-100'}`}>
-                      {api.status === 'Connected' ? 'Disconnect' : 'Connect'}
-                    </button>
-                  </div>
-                ))}
+                <select
+                  className="w-full border rounded-lg px-4 py-2 mt-1"
+                  value={retention.activity}
+                  onChange={(e) =>
+                    setRetention({
+                      ...retention,
+                      activity: e.target.value,
+                    })
+                  }
+                >
+                  <option>1 Year</option>
+                  <option>2 Years</option>
+                </select>
               </div>
+
+              <div>
+                <label>System Logs</label>
+
+                <select
+                  className="w-full border rounded-lg px-4 py-2 mt-1"
+                  value={retention.logs}
+                  onChange={(e) =>
+                    setRetention({
+                      ...retention,
+                      logs: e.target.value,
+                    })
+                  }
+                >
+                  <option>6 Months</option>
+                  <option>12 Months</option>
+                </select>
+              </div>
+
+              <button
+                onClick={updateRetention}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg"
+              >
+                Update Retention
+              </button>
             </div>
           </div>
         </div>
@@ -147,3 +306,8 @@ export default function Settings() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+export default Settings;
+>>>>>>> origin/master

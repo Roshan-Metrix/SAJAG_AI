@@ -19,8 +19,8 @@ for d in [MODELS_DIR, DATA_DIR, LOGS_DIR]:
     d.mkdir(parents=True, exist_ok=True)
 
 # ─── Database ─────────────────────────────────────────────────────────────────
-MONGO_URI  = os.getenv("MONGO_URI", "mongodb://localhost:27017")
-MONGO_DB   = os.getenv("MONGO_DB", "sajag_ai")
+MONGO_URI  = os.getenv("MONGO_URI")
+MONGO_DB   = os.getenv("MONGO_DB")
 
 # ─── Nepal Geographic Boundaries ──────────────────────────────────────────────
 NEPAL_BOUNDS = {

@@ -1,71 +1,154 @@
-import React, { useState } from 'react';
+import { useState } from "react";
+import { FaPaperPlane, FaPlus, FaSearch, FaComments } from "react-icons/fa";
 
-const CHANNELS = [
-  { id: 'control-room', name: 'Control Room', lastMsg: 'Heavy rainfall expected in Butwal area. All teams be alert.', time: '10:24 AM', unread: 2, online: true, color: 'bg-blue-600' },
-  { id: 'all-rescue', name: 'All Rescue Teams', lastMsg: 'Daily briefing at 8 AM tomorrow.', time: '09:10 AM', unread: 0, online: true, color: 'bg-green-600' },
-  { id: 'butwal-3', name: 'Butwal Unit 3', lastMsg: 'Rescue operation completed successfully.', time: '10:18 AM', unread: 0, online: true, color: 'bg-orange-500' },
-  { id: 'palpa-1', name: 'Palpa Unit 1', lastMsg: 'Landslide reported near Palpa. En route.', time: '10:25 AM', unread: 0, online: false, color: 'bg-purple-600' },
-  { id: 'kapilvastu-2', name: 'Kapilvastu Unit 2', lastMsg: 'Flood water level increasing in Kapilvastu.', time: '09:20 AM', unread: 0, online: false, color: 'bg-teal-600' },
-  { id: 'traffic', name: 'Traffic Control', lastMsg: 'Kalanki road is blocked. Use alternative route.', time: '08:55 AM', unread: 0, online: true, color: 'bg-yellow-600' },
-  { id: 'medical', name: 'Medical Teams', lastMsg: 'Medical team on standby at City Hospital.', time: '09:40 AM', unread: 0, online: true, color: 'bg-red-600' },
-  { id: 'all-channels', name: 'All Channels', lastMsg: '', time: '', unread: 0, online: true, color: 'bg-gray-600' },
-];
+function Communications() {
+  const channels = [
+    "Control Room",
+    "All Rescue Teams",
+    "Butwal Unit 3",
+    "Palpa Unit 1",
+    "Kapilvastu Unit 2",
+    "Traffic Control",
+    "Medical Teams",
+  ];
 
-const MESSAGES = {
-  'control-room': [
-    { from: 'Control Room', msg: 'Heavy rainfall expected in Butwal area. All teams be alert.', time: '10:24 AM', isOwn: false },
-    { from: 'Me', msg: 'Received. We are on standby.', time: '10:24 AM', isOwn: true },
-    { from: 'Palpa Unit 1', msg: 'Landslide reported near Palpa. En route.', time: '10:25 AM', isOwn: false },
-    { from: 'Me', msg: 'Copy that. Moving to high alert.', time: '10:26 AM', isOwn: true },
-    { from: 'Medical Teams', msg: 'Ensure all equipment is ready. Update every 30 minutes.', time: '10:27 AM', isOwn: false },
-  ],
-  'butwal-3': [
-    { from: 'Butwal Unit 3', msg: 'Rescue operation completed successfully.', time: '10:18 AM', isOwn: false },
-    { from: 'Me', msg: 'Great work. Return to base.', time: '10:19 AM', isOwn: true },
-  ],
-  'palpa-1': [
-    { from: 'Palpa Unit 1', msg: 'Landslide reported near Palpa. En route.', time: '10:25 AM', isOwn: false },
-  ],
-};
+  const [selectedChannel, setSelectedChannel] = useState("Control Room");
 
-export default function Communications() {
-  const [activeChannel, setActiveChannel] = useState('control-room');
-  const [newMsg, setNewMsg] = useState('');
-  const [activeTab, setActiveTab] = useState('Messages');
-  const messages = MESSAGES[activeChannel] || [];
-  const channel = CHANNELS.find(c => c.id === activeChannel);
+  const [search, setSearch] = useState("");
+
+  const [message, setMessage] = useState("");
+
+  const [messages, setMessages] = useState([
+    {
+      sender: "Control Room",
+      text: "Heavy rainfall expected in Butwal area. All teams be alert.",
+      time: "10:24 AM",
+    },
+    {
+      sender: "Butwal Unit 3",
+      text: "Received. We are on standby.",
+      time: "10:25 AM",
+    },
+    {
+      sender: "Palpa Unit 1",
+      text: "Copy that. Moving to high alert.",
+      time: "10:26 AM",
+    },
+  ]);
+
+  const sendMessage = () => {
+    if (!message.trim()) return;
+
+    const newMessage = {
+      sender: "You",
+      text: message,
+      time: new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+      }),
+    };
+
+    setMessages([...messages, newMessage]);
+
+    setMessage("");
+  };
+
+  const createNewMessage = () => {
+    const msg = prompt("Enter broadcast message");
+
+    if (!msg) return;
+
+    setMessages([
+      ...messages,
+      {
+        sender: "Control Room",
+        text: msg,
+        time: "Now",
+      },
+    ]);
+  };
+
+  const filteredMessages = messages.filter(
+    (msg) =>
+      msg.text.toLowerCase().includes(search.toLowerCase()) ||
+      msg.sender.toLowerCase().includes(search.toLowerCase()),
+  );
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 flex p-4 gap-4 bg-[#f0f4f8]">
-        {/* Left: Channels */}
-        <div className="w-56 bg-white rounded-xl shadow-card flex flex-col overflow-hidden">
-          <div className="p-3 border-b">
-            <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Channels</p>
+    <div className="space-y-5">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-semibold text-gray-800">
+            Communications
+          </h1>
+
+          <p className="text-sm text-gray-500">
+            Real-time communication and announcements
+          </p>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
+          {/* Search */}
+          <div className="relative">
+            <FaSearch className="absolute left-3 top-3 text-gray-400 text-sm" />
+
+            <input
+              type="text"
+              placeholder="Search messages..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="h-10 pl-9 pr-4 border rounded-lg text-sm outline-none"
+            />
           </div>
-          <div className="flex-1 overflow-y-auto divide-y">
-            {CHANNELS.map(ch => (
-              <button
-                key={ch.id}
-                onClick={() => setActiveChannel(ch.id)}
-                className={`w-full flex items-center gap-2 px-3 py-2.5 text-left transition hover:bg-gray-50 ${activeChannel === ch.id ? 'bg-blue-50' : ''}`}
+
+          {/* Dropdown */}
+          <select
+            value={selectedChannel}
+            onChange={(e) => setSelectedChannel(e.target.value)}
+            className="h-10 border rounded-lg px-4 text-sm"
+          >
+            {channels.map((channel) => (
+              <option key={channel}>{channel}</option>
+            ))}
+          </select>
+
+          {/* New Message */}
+          <button
+            onClick={createNewMessage}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-lg flex items-center gap-2 text-sm"
+          >
+            <FaPlus />
+            New Message
+          </button>
+        </div>
+      </div>
+
+      {/* Main Layout */}
+      <div className="grid lg:grid-cols-12 gap-4">
+        {/* Channels */}
+        <div className="lg:col-span-3 bg-white border rounded-xl p-4">
+          <h3 className="font-semibold text-sm mb-4">CHANNELS</h3>
+
+          <div className="space-y-2">
+            {channels.map((channel) => (
+              <div
+                key={channel}
+                onClick={() => setSelectedChannel(channel)}
+                className={`p-3 rounded-lg cursor-pointer text-sm flex items-center gap-3 ${
+                  selectedChannel === channel
+                    ? "bg-blue-100 text-blue-600"
+                    : "hover:bg-gray-100"
+                }`}
               >
-                <div className={`w-8 h-8 rounded-full ${ch.color} flex items-center justify-center text-white text-xs font-bold flex-shrink-0 relative`}>
-                  {ch.name.charAt(0)}
-                  {ch.online && <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white" />}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-medium truncate ${activeChannel === ch.id ? 'text-blue-700' : 'text-gray-700'}`}>{ch.name}</p>
-                  <p className="text-[10px] text-gray-400 truncate">{ch.lastMsg}</p>
-                </div>
-                {ch.unread > 0 && (
-                  <span className="w-4 h-4 bg-blue-600 text-white text-[9px] rounded-full flex items-center justify-center flex-shrink-0">{ch.unread}</span>
-                )}
-              </button>
+                <FaComments />
+                {channel}
+              </div>
             ))}
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* Right: Chat */}
         <div className="flex-1 bg-white rounded-xl shadow-card flex flex-col overflow-hidden">
           {/* Tabs */}
@@ -114,11 +197,55 @@ export default function Communications() {
                     {m.msg}
                   </div>
                   <p className="text-[9px] text-gray-400 mt-0.5">{m.time}</p>
+=======
+        {/* Message List */}
+        <div className="lg:col-span-4 bg-white border rounded-xl overflow-hidden">
+          <div className="p-4 border-b font-medium">{selectedChannel}</div>
+
+          <div className="max-h-[600px] overflow-y-auto">
+            {filteredMessages.map((msg, index) => (
+              <div key={index} className="p-4 border-b hover:bg-gray-50">
+                <div className="flex justify-between mb-1">
+                  <span className="font-medium text-sm">{msg.sender}</span>
+
+                  <span className="text-xs text-gray-500">{msg.time}</span>
+                </div>
+
+                <p className="text-sm text-gray-600">{msg.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Chat Area */}
+        <div className="lg:col-span-5 bg-white border rounded-xl flex flex-col">
+          <div className="p-4 border-b font-medium">{selectedChannel}</div>
+
+          <div className="flex-1 p-4 space-y-4 overflow-y-auto">
+            {filteredMessages.map((msg, index) => (
+              <div
+                key={index}
+                className={`max-w-[75%] px-4 py-3 rounded-xl text-sm ${
+                  msg.sender === "You"
+                    ? "bg-blue-600 text-white ml-auto"
+                    : "bg-gray-100 text-gray-700"
+                }`}
+              >
+                <p>{msg.text}</p>
+
+                <div
+                  className={`text-xs mt-2 ${
+                    msg.sender === "You" ? "text-blue-100" : "text-gray-500"
+                  }`}
+                >
+                  {msg.time}
+>>>>>>> origin/master
                 </div>
               </div>
             ))}
           </div>
 
+<<<<<<< HEAD
           {/* Input */}
           <div className="flex items-center gap-2 p-3 border-t flex-shrink-0">
             <input
@@ -131,6 +258,23 @@ export default function Communications() {
             <button className="text-xl">😊</button>
             <button onClick={() => setNewMsg('')} className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 text-sm">
               ➤
+=======
+          {/* Send Message */}
+          <div className="border-t p-4 flex gap-2">
+            <input
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && sendMessage()}
+              placeholder="Type a message..."
+              className="flex-1 border rounded-lg px-4 py-2 text-sm outline-none"
+            />
+
+            <button
+              onClick={sendMessage}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-lg"
+            >
+              <FaPaperPlane />
+>>>>>>> origin/master
             </button>
           </div>
         </div>
@@ -138,3 +282,8 @@ export default function Communications() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+export default Communications;
+>>>>>>> origin/master

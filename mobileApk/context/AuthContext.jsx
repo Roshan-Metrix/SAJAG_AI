@@ -13,8 +13,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const [user, setUser] = useState({
-        id: "1",
-        role: "citizen",
+        role: "rescuers",
     });
 
     function saveUser(user) {
