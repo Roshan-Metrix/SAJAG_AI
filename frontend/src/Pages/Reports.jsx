@@ -140,5 +140,8 @@ function Reports() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
 
 export default Reports;
+>>>>>>> origin/master

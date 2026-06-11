@@ -148,6 +148,56 @@ function Communications() {
           </div>
         </div>
 
+<<<<<<< HEAD
+        {/* Right: Chat */}
+        <div className="flex-1 bg-white rounded-xl shadow-card flex flex-col overflow-hidden">
+          {/* Tabs */}
+          <div className="flex items-center gap-1 px-4 pt-3 border-b flex-shrink-0">
+            {['Messages','Broadcasts','Voice Messages','Announcements'].map(t => (
+              <button key={t} onClick={() => setActiveTab(t)} className={`px-4 py-2 text-sm transition border-b-2 ${activeTab === t ? 'border-blue-600 text-blue-600 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>{t}</button>
+            ))}
+            <div className="ml-auto flex items-center gap-2 mb-2">
+              <div className="relative">
+                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">🔍</span>
+                <input placeholder="Search messages..." className="pl-8 pr-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:outline-none" />
+              </div>
+              <select className="text-xs border border-gray-200 rounded-lg px-2 py-1.5 bg-white">
+                <option>All Channels</option>
+              </select>
+              <button className="bg-[#1a3a6b] text-white text-xs px-3 py-1.5 rounded-lg hover:bg-[#0f2347]">
+                ＋ New Message
+              </button>
+            </div>
+          </div>
+
+          {/* Chat Header */}
+          <div className="flex items-center gap-3 px-4 py-2 border-b bg-gray-50 flex-shrink-0">
+            <div className={`w-8 h-8 rounded-full ${channel?.color || 'bg-blue-600'} flex items-center justify-center text-white text-xs font-bold relative`}>
+              {channel?.name?.charAt(0)}
+              {channel?.online && <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-400 rounded-full border border-white" />}
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-800">{channel?.name}</p>
+              <p className="text-[10px] text-green-500">● Online</p>
+            </div>
+          </div>
+
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-3">
+            {messages.map((m, i) => (
+              <div key={i} className={`flex gap-2 ${m.isOwn ? 'flex-row-reverse' : ''}`}>
+                {!m.isOwn && (
+                  <div className={`w-7 h-7 rounded-full ${channel?.color || 'bg-blue-600'} flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0`}>
+                    {m.from.charAt(0)}
+                  </div>
+                )}
+                <div className={`max-w-xs ${m.isOwn ? 'items-end' : 'items-start'} flex flex-col`}>
+                  {!m.isOwn && <p className="text-[10px] text-gray-500 mb-0.5">{m.from}</p>}
+                  <div className={`px-3 py-2 rounded-xl text-xs ${m.isOwn ? 'bg-[#1a3a6b] text-white rounded-tr-none' : 'bg-gray-100 text-gray-700 rounded-tl-none'}`}>
+                    {m.msg}
+                  </div>
+                  <p className="text-[9px] text-gray-400 mt-0.5">{m.time}</p>
+=======
         {/* Message List */}
         <div className="lg:col-span-4 bg-white border rounded-xl overflow-hidden">
           <div className="p-4 border-b font-medium">{selectedChannel}</div>
@@ -189,11 +239,26 @@ function Communications() {
                   }`}
                 >
                   {msg.time}
+>>>>>>> origin/master
                 </div>
               </div>
             ))}
           </div>
 
+<<<<<<< HEAD
+          {/* Input */}
+          <div className="flex items-center gap-2 p-3 border-t flex-shrink-0">
+            <input
+              value={newMsg}
+              onChange={e => setNewMsg(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && setNewMsg('')}
+              placeholder="Type a message..."
+              className="flex-1 text-sm border border-gray-200 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+            />
+            <button className="text-xl">😊</button>
+            <button onClick={() => setNewMsg('')} className="w-9 h-9 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 text-sm">
+              ➤
+=======
           {/* Send Message */}
           <div className="border-t p-4 flex gap-2">
             <input
@@ -209,6 +274,7 @@ function Communications() {
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 rounded-lg"
             >
               <FaPaperPlane />
+>>>>>>> origin/master
             </button>
           </div>
         </div>
@@ -216,5 +282,8 @@ function Communications() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
 
 export default Communications;
+>>>>>>> origin/master

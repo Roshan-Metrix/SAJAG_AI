@@ -306,5 +306,8 @@ function Settings() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
 
 export default Settings;
+>>>>>>> origin/master

@@ -184,5 +184,8 @@ function Users() {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
 
 export default Users;
+>>>>>>> origin/master
