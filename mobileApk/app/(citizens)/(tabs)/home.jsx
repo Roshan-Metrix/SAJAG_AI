@@ -143,6 +143,7 @@ export default function HomeScreen() {
                                         />
                                     }
                                     label="Track your SOS"
+                                    link="/(citizens)/track-your-SOSs"
                                 />
 
                                 <QuickAction
