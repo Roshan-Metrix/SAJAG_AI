@@ -22,7 +22,6 @@ import {
 } from "expo-audio";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import * as FileSystem from "expo-file-system/legacy";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -187,19 +186,8 @@ function VoiceRecorder({ recordingUri, recordingDuration, onChange }) {
         try {
             await audioRecorder.stop();
             // uri is now available on audioRecorder.uri
-            const base64 = await FileSystem.readAsStringAsync(
-                audioRecorder.uri,
-                {
-                    encoding: FileSystem.EncodingType.Base64,
-                },
-            );
-
             if (audioRecorder.uri) {
-                onChange({
-                    uri: audioRecorder.uri,
-                    duration: elapsedSecs,
-                    base64,
-                });
+                onChange({ uri: audioRecorder.uri, duration: elapsedSecs });
             }
             await setAudioModeAsync({ allowsRecording: false });
         } catch {
@@ -368,23 +356,8 @@ export default function ReportIncidentScreen() {
             selectionLimit: MAX_PHOTOS - photos.length,
         });
         if (!result.canceled) {
-            const newPhotos = await Promise.all(
-                result.assets.map(async (asset) => {
-                    const base64 = await FileSystem.readAsStringAsync(
-                        asset.uri,
-                        {
-                            encoding: FileSystem.EncodingType.Base64,
-                        },
-                    );
-
-                    return {
-                        uri: asset.uri,
-                        base64,
-                    };
-                }),
-            );
-
-            setValue("photos", [...photos, ...newPhotos].slice(0, MAX_PHOTOS));
+            const newUris = result.assets.map((a) => a.uri);
+            setValue("photos", [...photos, ...newUris].slice(0, MAX_PHOTOS));
         }
     };
 
@@ -397,22 +370,20 @@ export default function ReportIncidentScreen() {
 
     // ── Submit ────────────────────────────────────────────────────────────────
     const onSubmit = (data) => {
-        const payload = {
-            incidentType: data.incidentType,
-            description: data.description,
-
-            photos: data.photos.map((photo) => ({
-                base64: photo.base64,
-            })),
-
-            voice: data.voiceMessage
-                ? {
-                      base64: data.voiceMessage.base64,
-                  }
-                : null,
-        };
-
-        // console.log("payload", JSON.stringify(payload, null, 2));
+        console.log(
+            "✅ Incident Report Submitted:",
+            JSON.stringify(data, null, 2),
+        );
+        Alert.alert(
+            "Report Submitted",
+            [
+                `Type: ${data.incidentType}`,
+                `Words: ${countWords(data.description)}`,
+                `Photos: ${data.photos.length}`,
+                `Voice: ${data.voiceMessage ? `Yes (${formatTime(data.voiceMessage.duration)})` : "No"}`,
+            ].join("\n"),
+            [{ text: "OK" }],
+        );
     };
 
     const onError = (errs) => {
@@ -565,10 +536,10 @@ export default function ReportIncidentScreen() {
 
                         <View className="flex-row items-center flex-wrap">
                             {/* First 3 thumbnails */}
-                            {photos.slice(0, 3).map((photo, index) => (
+                            {photos.slice(0, 3).map((uri, index) => (
                                 <PhotoThumb
-                                    key={`${photo.uri}-${index}`}
-                                    uri={photo.uri}
+                                    key={`${uri}-${index}`}
+                                    uri={uri}
                                     index={index}
                                     onRemove={removePhoto}
                                 />
