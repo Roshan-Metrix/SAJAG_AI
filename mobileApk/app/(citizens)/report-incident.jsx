@@ -24,6 +24,8 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as FileSystem from "expo-file-system/legacy";
+import { useAuth } from "../../context/AuthContext";
+import api from "../../api/api";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const INCIDENT_TYPES = ["Flood", "Landslide", "Accident", "Fire", "Other"];
@@ -340,6 +342,7 @@ export default function ReportIncidentScreen() {
             voiceMessage: null, // { uri, duration } | null
         },
     });
+    let [mobile_no, setMobile_no] = useState("");
 
     const description = watch("description");
     const photos = watch("photos");
@@ -395,9 +398,14 @@ export default function ReportIncidentScreen() {
         );
     };
 
+    let { user } = useAuth();
     // ── Submit ────────────────────────────────────────────────────────────────
     const onSubmit = async (data) => {
         try {
+            if (!mobile_no) {
+                Alert.alert("Please enter your mobile number");
+                return;
+            }
             const photosWithBase64 = await Promise.all(
                 data.photos.map(async (photoUri, i) => {
                     const destUri =
@@ -418,24 +426,37 @@ export default function ReportIncidentScreen() {
                         await FileSystem.deleteAsync(destUri, {
                             idempotent: true,
                         });
-                        return { base64 };
+                        return base64;
                     } catch (err) {
                         console.warn(`Photo ${i} read failed:`, err);
-                        return { base64: null };
+                        return null;
                     }
                 }),
             );
 
             const payload = {
-                incidentType: data.incidentType,
+                incident_type: data.incidentType,
                 description: data.description,
-                photos: photosWithBase64,
-                voice: data.voiceMessage?.base64
-                    ? { base64: data.voiceMessage.base64 }
+                media: photosWithBase64,
+                voice_messages: data.voiceMessage?.base64
+                    ? data.voiceMessage.base64
                     : null,
+                mobile_no,
+                citizen_id: user.id,
             };
+            // console.log(payload);
 
-            console.log(payload.photos[0].base64.slice(0, 100));
+            let res = await fetch(`${process.env.EXPO_PUBLIC_BACKEND_URL}/reports`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+            // console.log(res);
+            let d = await res.json();
+            console.log(d);
+            // console.log(payload);
         } catch (e) {
             console.error("Submit error:", e);
             Alert.alert("Error", "Failed to prepare report. Please try again.");
@@ -571,6 +592,20 @@ export default function ReportIncidentScreen() {
                                 {wordsLeft} / {MAX_WORDS} words left
                             </Text>
                         </View>
+                    </View>
+
+                    <View>
+                        <Text className="text-xl font-bold text-gray-900">
+                            Phone Number
+                        </Text>
+                        <TextInput
+                            className="border border-gray-200 rounded-2xl p-4 text-base text-gray-800 bg-gray-50 mb-1"
+                            placeholder="Enter your phone number"
+                            placeholderTextColor="#9CA3AF"
+                            keyboardType="phone-pad"
+                            value={mobile_no}
+                            onChangeText={(text) => setMobile_no(text)}
+                        />
                     </View>
 
                     {/* ── Photos ── */}

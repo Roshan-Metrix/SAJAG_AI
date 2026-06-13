@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ScreenWrapper from "../../../components/ScreenWrapper";
+import { useAuth } from "../../../context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // ── Sample data ────────────────────────────────────────────────────────────────
 const USER = {
@@ -20,7 +22,7 @@ const USER = {
 const STATS = [
     {
         label: "Assigned\nMissions",
-        value: 12,
+        value: 2,
         color: "text-blue-500",
         border: "border-blue-200",
         bg: "bg-blue-50",
@@ -34,7 +36,7 @@ const STATS = [
     },
     {
         label: "Completed",
-        value: 36,
+        value: 6,
         color: "text-green-500",
         border: "border-green-200",
         bg: "bg-green-50",
@@ -42,9 +44,24 @@ const STATS = [
 ];
 
 const PRIORITY = {
-    high: { bg: "bg-red-500", text: "text-white" , cbg: "bg-red-50" , border: "border-red-200"},
-    medium: { bg: "bg-orange-400", text: "text-white" , cbg: "bg-orange-50" , border: "border-orange-200"},
-    normal: { bg: "bg-blue-500", text: "text-white" , cbg: "bg-blue-50", border: "border-blue-200"},
+    high: {
+        bg: "bg-red-500",
+        text: "text-white",
+        cbg: "bg-red-50",
+        border: "border-red-200",
+    },
+    medium: {
+        bg: "bg-orange-400",
+        text: "text-white",
+        cbg: "bg-orange-50",
+        border: "border-orange-200",
+    },
+    normal: {
+        bg: "bg-blue-500",
+        text: "text-white",
+        cbg: "bg-blue-50",
+        border: "border-blue-200",
+    },
 };
 
 const OPERATIONS = [
@@ -73,6 +90,23 @@ const OPERATIONS = [
         type: "accident",
     },
 ];
+
+function EmptyOperations() {
+    return (
+        <View className="items-center justify-center py-8 px-6">
+            <View className="w-20 h-20 rounded-full bg-blue-50 items-center justify-center mb-4">
+                <Text style={{ fontSize: 36 }}>📋</Text>
+            </View>
+            <Text className="text-xl font-bold text-gray-800 text-center mb-2">
+                No Operations Assigned
+            </Text>
+            <Text className="text-sm text-gray-400 text-center leading-5">
+                You have no active operations for today. Check back later or
+                contact your supervisor.
+            </Text>
+        </View>
+    );
+}
 
 const Icons = {
     flood: "🌊",
@@ -117,7 +151,7 @@ function Avatar({ uri, size = 52 }) {
 }
 
 /** Single stat card */
-function StatCard({ label, value, color, border, bg }) {
+function StatCard({ label, value, color, border, bg, dashDetails }) {
     return (
         <View
             className={`flex-1 mx-1 rounded-2xl border ${border} ${bg} items-center py-4 px-2 pt-6 justify-between`}
@@ -127,7 +161,9 @@ function StatCard({ label, value, color, border, bg }) {
             >
                 {label}
             </Text>
-            <Text className={`text-4xl font-bold ${color}`}>{value}</Text>
+            <Text className={`text-4xl font-bold ${color}`}>
+                {dashDetails?.count === 0 && label === "Assigned\nMissions" ? 0 : value}
+            </Text>
         </View>
     );
 }
@@ -180,6 +216,8 @@ function OperationCard({ title, location, priority, type }) {
 
 // ── Main screen ────────────────────────────────────────────────────────────────
 export default function DashboardScreen() {
+    let [dashDetails, setDashDetails] = useState({});
+    let { user } = useAuth();
     const hour = new Date().getHours();
     const greeting =
         hour < 12
@@ -187,6 +225,31 @@ export default function DashboardScreen() {
             : hour < 17
               ? "Good Afternoon,"
               : "Good Evening,";
+
+    async function getDashDetails() {
+        let token = await AsyncStorage.getItem("token");
+        let res = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}/missions`,
+            {
+                method: "get",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            },
+        );
+
+        if (!res.ok) {
+            throw new Error(res.statusText);
+        }
+        let data = await res.json();
+        setDashDetails(data);
+        console.log(data);
+    }
+
+    useEffect(() => {
+        getDashDetails();
+    }, []);
 
     return (
         <ScreenWrapper>
@@ -214,7 +277,7 @@ export default function DashboardScreen() {
                                         className="text-3xl font-bold text-gray-800 mt-0.5"
                                         numberOfLines={1}
                                     >
-                                        {USER.name}
+                                        {user?.full_name || "Inspector Sharma"}
                                     </Text>
                                 </View>
                             </View>
@@ -233,7 +296,11 @@ export default function DashboardScreen() {
                         {/* ── Stats row ── */}
                         <View className="flex-row px-4 mt-5">
                             {STATS.map((s) => (
-                                <StatCard key={s.label} {...s} />
+                                <StatCard
+                                    key={s.label}
+                                    dashDetails={dashDetails}
+                                    {...s}
+                                />
                             ))}
                         </View>
 
@@ -250,9 +317,16 @@ export default function DashboardScreen() {
                                 </TouchableOpacity>
                             </View>
 
-                            {OPERATIONS.map((op) => (
-                                <OperationCard key={op.id} {...op} />
-                            ))}
+                            {dashDetails?.missions?.length > 0 ? (
+                                dashDetails.missions.map((mission) => (
+                                    <OperationCard
+                                        key={mission.id}
+                                        {...mission}
+                                    />
+                                ))
+                            ) : (
+                                <EmptyOperations />
+                            )}
                         </View>
                     </ScrollView>
                 </View>

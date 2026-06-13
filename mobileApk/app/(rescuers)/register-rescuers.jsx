@@ -14,6 +14,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import { useRouter } from "expo-router";
 import { Ionicons, MaterialCommunityIcons, Feather } from "@expo/vector-icons";
+import Toast from "react-native-toast-message";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -510,7 +511,7 @@ function Step3({ onNext, onBack, email }) {
             setOtpError("Please enter the complete 6-digit OTP");
             return;
         }
-        onNext();
+        onNext(otp, email);
     };
 
     const formatTime = (s) =>
@@ -725,6 +726,7 @@ function SuccessScreen({ onGoToLogin }) {
 
 // ─── ROOT: Signup Flow Orchestrator ──────────────────────────────────────────
 export default function SignupScreen() {
+    // let [loadingRegister, setLoadingRegister] = useState(false);
     const router = useRouter();
     const [step, setStep] = useState(1);
     const [step1Data, setStep1Data] = useState(null);
@@ -736,18 +738,75 @@ export default function SignupScreen() {
         setStep(2);
     };
 
-    const handleStep3Next = () => setStep(4);
-    const handleStep2Next = (data) => {
+    const handleStep2Next = async (data) => {
         setStep2Data(data);
-        const payload = {
-            fullName: step1Data?.fullName,
-            mobileNumber: step1Data?.mobileNumber,
-            email: step1Data?.email,
-            password: data.password, // ← from Step 3
-        };
-        console.log("Submitting to backend:", payload);
+        // setLoadingRegister(true);
+
+        let res = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/rescue/register`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    full_name: step1Data?.fullName,
+                    mobile_number: step1Data?.mobileNumber,
+                    email: step1Data?.email,
+                    password: data.password, // ← from Step 3
+                }),
+            },
+        );
+        let resData = await res.json();
+        //    setLoadingRegister(false);
+        if (!res.ok) {
+            Toast.show({
+                type: "error",
+                text1: "User already exists.",
+                text2: "Try with different email",
+            });
+            console.log(resData);
+            return;
+        }
+        // console.log(res);
         // await yourApi.register(payload);
         setStep(3);
+    };
+
+    const handleStep3Next = async (otp, email) => {
+        let res = await fetch(
+            `${process.env.EXPO_PUBLIC_BACKEND_URL}/auth/verify-otp`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    email,
+                    otp: otp.join(""),
+                    purpose: "register",
+                }),
+            },
+        );
+        let resData = await res.json();
+        console.log(resData);
+        if(!res.ok){
+            Toast.show({
+                type: "error",
+                text1: "Invalid OTP.",
+                text2: "Restart the process again.",
+            });
+            return;
+        }
+        // console.log(email,otp);
+
+        // if (res.status === "success") {
+        //     setStep(4);
+        // } else {
+        //     alert(res.message);
+        // }
+
+        setStep(4);
     };
 
     return (
