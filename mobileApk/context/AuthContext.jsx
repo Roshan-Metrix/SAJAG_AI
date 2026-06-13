@@ -12,9 +12,7 @@ export const AuthProvider = ({ children }) => {
         });
     }, []);
 
-    const [user, setUser] = useState({
-        role: "citizen",
-    });
+    const [user, setUser] = useState(null);
 
     function saveUser(user) {
         AsyncStorage.setItem("user", JSON.stringify(user)).then(() => {
@@ -25,6 +23,7 @@ export const AuthProvider = ({ children }) => {
     async function logoutCitizen() {
         setUser(null);
         await AsyncStorage.removeItem("user");
+        await AsyncStorage.removeItem("token");
     }
 
     return (
