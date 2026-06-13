@@ -55,7 +55,6 @@ export default function HomeScreen() {
         if (!latitude || !longitude) return;
         getAlerts();
     }, [latitude, longitude]);
-    console.log(alerts);
 
     return (
         <ScreenWrapper>
