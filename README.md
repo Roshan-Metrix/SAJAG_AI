@@ -44,25 +44,21 @@ These challenges often result in slower response times and inefficient deploymen
 
 SAJAG AI provides a **Unified Police Intelligence Platform** that enables:
 
-✅ Real-Time Emergency Monitoring
-
-✅ AI-Assisted Decision Making
-
-✅ Rescue Team Coordination
-
-✅ Citizen SOS Reporting
-
-✅ Predictive Risk Analysis
-
-✅ Disaster Heatmaps
-
-✅ Resource Management
-
-✅ Offline Emergency Operations
+- Real-Time Emergency Monitoring
+- AI-Assisted Decision Making
+- Rescue Team Coordination
+- Citizen SOS Reporting
+- Predictive Risk Analysis
+- Disaster Heatmaps
+- Resource Management
+- Offline Emergency Operations
 
 The platform acts as a centralized command center where authorities can monitor incidents, deploy rescue teams, track operations, and make data-driven decisions.
 
 ---
+
+## Project Vdeo
+[Demo](https://drive.google.com/drive/folders/1CACcDEU8uNz0WMPxbH1PWxm4o58cdOyi?usp=drive_link)
 
 # 🏗 System Architecture
 
